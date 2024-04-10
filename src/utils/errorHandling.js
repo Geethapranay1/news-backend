@@ -1,26 +1,22 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-
-exports.generateToken = (user) => {
-  return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-};
-
-exports.authenticate = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
+exports.errorHandler = (err, req, res, next) => {
+    console.error(err.stack);
+  
+    // Determine the appropriate HTTP status code based on the error
+    let statusCode;
+    if (err.name === 'ValidationError') {
+      statusCode = 400; // Bad Request
+    } else if (err.name === 'CastError') {
+      statusCode = 404; // Not Found
+    } else if (err.name === 'JsonWebTokenError') {
+      statusCode = 401; // Unauthorized
+    } else {
+      statusCode = 500; // Internal Server Error
     }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
+  
+    res.status(statusCode).json({
+      error: {
+        message: err.message,
+        code: statusCode,
+      },
+    });
+  };
