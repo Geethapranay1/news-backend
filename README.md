@@ -23,10 +23,6 @@ This is the backend system for a News client application, developed using Expres
 5. **Error Handling and Logging**:
    - Implement robust error handling and logging for better debugging and user experience.
 
-## API Documentation
-
-Detailed API documentation, including request and response formats, is available in the API.md
-
 ## Getting Started
 
 1. Clone the repository:
@@ -34,7 +30,6 @@ Detailed API documentation, including request and response formats, is available
 ex: git clone https://github.com/your-username/Backend.git
 
 2. Install dependencies:
-cd Backend
 npm install
 
 3. Set up environment variables:
